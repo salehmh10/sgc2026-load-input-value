@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sgc2026-load-input-value"
+version = "0.1.0"
+description = "Research companion for incremental weather and calendar input value in hour-ahead load forecasting"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = ["numpy==2.2.6", "matplotlib==3.10.3"]
+
+[project.optional-dependencies]
+train = ["pandas==2.2.3", "scipy==1.15.3", "scikit-learn==1.7.2", "holidays==0.103", "darts[torch]==0.41.0", "torch==2.13.0", "pytorch-lightning==2.5.2", "xgboost==3.4.0", "pyarrow==25.0.0"]
+dev = ["pytest==8.4.2", "pandas==2.2.3", "pypdf==6.1.1", "PyYAML==6.0.3"]
+
+[project.scripts]
+liv = "load_input_value.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

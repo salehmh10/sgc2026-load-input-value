@@ -1,0 +1,15 @@
+# INCOMPLETE TEMPLATE: not a valid final CFF file and not ready for citation.
+# CFF 1.2 requires at least one confirmed author. Complete the authors field,
+# validate against the official CFF schema, then rename this to CITATION.cff.
+cff-version: 1.2.0
+message: "Citation metadata is provisional. Confirm the author list before citing this research companion."
+title: "Incremental Value of Weather and Calendar Inputs in Hour-Ahead Load Forecasting"
+type: software
+version: 0.1.0
+repository-code: "https://github.com/salehmh10/sgc2026-load-input-value"
+# authors: REQUIRED; no identities are inferred.
+keywords:
+  - load forecasting
+  - weather inputs
+  - feature ablation
+  - reproducible research

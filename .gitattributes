@@ -1,0 +1,16 @@
+* text=auto eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.md text eol=lf
+*.tex text eol=lf
+*.json text eol=lf
+*.csv text eol=lf
+*.yml text eol=lf
+*.pdf binary
+*.png binary
+# Historical reference artifacts preserve their admitted bytes, including CRLF.
+results/reference/** -text
+paper/IEEEtran.cls -text
+paper/IEEEtran.bst -text
+paper/tex-support/upstream/** -text
+paper/*.sty -text

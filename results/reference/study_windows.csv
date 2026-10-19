@@ -1,0 +1,7 @@
+fold,partition,start,end_exclusive,grid_hours,observed_targets,complete_days,days,observed_temperature_count,temperature_median_C,temperature_min_C,temperature_max_C
+warm_late_summer,train,2024-08-04,2025-08-04,8760,7088,154,365,7088,16.0,-14.0,40.0
+warm_late_summer,validation,2025-08-04,2025-09-01,672,611,2,28,611,27.0,18.0,37.0
+warm_late_summer,evaluation,2025-09-01,2025-09-29,672,626,10,28,626,23.0,12.0,37.0
+cold,train,2024-11-03,2025-11-03,8760,7196,152,365,7196,16.0,-14.0,39.0
+cold,validation,2025-11-03,2025-12-01,672,662,25,28,662,11.0,1.0,26.0
+cold,evaluation,2025-12-01,2025-12-29,672,669,25,28,669,6.0,-6.0,21.0

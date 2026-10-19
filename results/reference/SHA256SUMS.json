@@ -1,0 +1,10 @@
+{
+  "expected-tables/conditions.tex": "2701c4bcd53893a561c597f8f3ce587d3fe9bd1566c4344107d6918128b207e3",
+  "expected-tables/i15_accuracy.tex": "277ac77dfd6fae75a1fd280bd948c5d14b39cee6d949067dd723e4a201dad6e8",
+  "expected-tables/i15_validation.tex": "3c0985000a5de20b7d404b83d6d17571e470b9616f3e156be898f1501ca6cddf",
+  "i15_accuracy.csv": "91e0f03ef026b3a6a8d38c61a3d9c3c9f415f1e0d95f401d590d9344c95af9d3",
+  "i15_contrasts.csv": "fbc3902a02077f4e07c9f23b5cd8b75aeae80f53c75bd5ed012e50ed6bc73eb5",
+  "i15_primary_seed_points.csv": "1ff42912c0175d33bd704b49b9dd03445e87741ade977a6178cf3d05dd4dd914",
+  "i15_simple_references.csv": "183a4ac89e3d0360030df6d0b55eec2e7bbb03da1b0d769ad2a9786861f20c34",
+  "study_windows.csv": "b1e3e71be9ba30b95d740a705e5a41df61295f003e09c5174e45f21e5cabe1ab"
+}

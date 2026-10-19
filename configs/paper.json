@@ -1,0 +1,350 @@
+{
+  "schema_version": 1,
+  "label": "paper-protocol-new-execution",
+  "strict_observed_counts": true,
+  "folds": {
+    "warm_late_summer": {
+      "train": [
+        "2024-08-04",
+        "2025-08-04"
+      ],
+      "validation": [
+        "2025-08-04",
+        "2025-09-01"
+      ],
+      "evaluation": [
+        "2025-09-01",
+        "2025-09-29"
+      ]
+    },
+    "cold": {
+      "train": [
+        "2024-11-03",
+        "2025-11-03"
+      ],
+      "validation": [
+        "2025-11-03",
+        "2025-12-01"
+      ],
+      "evaluation": [
+        "2025-12-01",
+        "2025-12-29"
+      ]
+    }
+  },
+  "conditions": [
+    "FULL",
+    "NO_DERIVED",
+    "NO_TEMP",
+    "NO_HUMIDITY",
+    "NO_CALENDAR",
+    "NO_WEATHER",
+    "FULL_PROXY"
+  ],
+  "seeds": [
+    42,
+    314,
+    2718
+  ],
+  "tide": {
+    "architecture": {
+      "hidden_size": 128,
+      "num_encoder_layers": 2,
+      "num_decoder_layers": 1,
+      "decoder_output_dim": 16,
+      "temporal_width_past": 4,
+      "temporal_width_future": 4,
+      "temporal_hidden_size_past": 16,
+      "temporal_hidden_size_future": 16,
+      "temporal_decoder_hidden": 32,
+      "use_layer_norm": true,
+      "dropout": 0.1
+    },
+    "training": {
+      "optimizer": "AdamW",
+      "lr": 0.0003,
+      "weight_decay": 0.0001,
+      "batch_size": 64,
+      "loss": "L1",
+      "gradient_clip_val": 1.0,
+      "shuffle": false,
+      "num_workers": 0,
+      "CPU_threads": 4,
+      "deterministic": true,
+      "max_epochs": 200,
+      "max_fit_seconds": 1800,
+      "early_stopping": {
+        "monitor": "val_loss",
+        "partition": "Validation",
+        "patience": 12,
+        "min_delta": 0.0001
+      },
+      "initialization": "fresh; equal state SHA256 for seven arms within fold/seed",
+      "best_checkpoint": "reload strict; fresh-process validation at identical batch size"
+    }
+  },
+  "ridge": {
+    "family": "Ridge-ARX",
+    "alphas": [
+      0.01,
+      0.1,
+      1,
+      10,
+      100,
+      1000,
+      10000
+    ],
+    "fit_intercept": true,
+    "solver": "float64 centered primal normal equations, Cholesky",
+    "objective": "sum squared kW residuals + alpha * sum squared coefficients",
+    "stationarity_relative_tolerance": 1e-07,
+    "final_models": 14
+  },
+  "xgboost": {
+    "family": "XGBoost",
+    "search_seed": 20260926,
+    "sampling": "Python random.Random.sample without replacement over documented cartesian grid",
+    "grid": {
+      "max_depth": [
+        2,
+        3,
+        4
+      ],
+      "learning_rate": [
+        0.03,
+        0.07
+      ],
+      "min_child_weight": [
+        1,
+        5
+      ],
+      "subsample": [
+        0.8,
+        1.0
+      ],
+      "colsample_bytree": [
+        0.6,
+        1.0
+      ],
+      "reg_lambda": [
+        1.0,
+        10.0
+      ]
+    },
+    "candidates": [
+      {
+        "max_depth": 2,
+        "learning_rate": 0.03,
+        "min_child_weight": 5,
+        "subsample": 0.8,
+        "colsample_bytree": 0.6,
+        "reg_lambda": 10.0
+      },
+      {
+        "max_depth": 2,
+        "learning_rate": 0.03,
+        "min_child_weight": 1,
+        "subsample": 1.0,
+        "colsample_bytree": 0.6,
+        "reg_lambda": 10.0
+      },
+      {
+        "max_depth": 2,
+        "learning_rate": 0.03,
+        "min_child_weight": 1,
+        "subsample": 0.8,
+        "colsample_bytree": 1.0,
+        "reg_lambda": 1.0
+      },
+      {
+        "max_depth": 4,
+        "learning_rate": 0.03,
+        "min_child_weight": 5,
+        "subsample": 0.8,
+        "colsample_bytree": 1.0,
+        "reg_lambda": 10.0
+      },
+      {
+        "max_depth": 2,
+        "learning_rate": 0.07,
+        "min_child_weight": 5,
+        "subsample": 1.0,
+        "colsample_bytree": 0.6,
+        "reg_lambda": 10.0
+      },
+      {
+        "max_depth": 4,
+        "learning_rate": 0.03,
+        "min_child_weight": 1,
+        "subsample": 0.8,
+        "colsample_bytree": 0.6,
+        "reg_lambda": 1.0
+      },
+      {
+        "max_depth": 2,
+        "learning_rate": 0.07,
+        "min_child_weight": 1,
+        "subsample": 1.0,
+        "colsample_bytree": 1.0,
+        "reg_lambda": 10.0
+      },
+      {
+        "max_depth": 4,
+        "learning_rate": 0.07,
+        "min_child_weight": 1,
+        "subsample": 0.8,
+        "colsample_bytree": 0.6,
+        "reg_lambda": 1.0
+      },
+      {
+        "max_depth": 2,
+        "learning_rate": 0.03,
+        "min_child_weight": 1,
+        "subsample": 1.0,
+        "colsample_bytree": 0.6,
+        "reg_lambda": 1.0
+      },
+      {
+        "max_depth": 2,
+        "learning_rate": 0.03,
+        "min_child_weight": 5,
+        "subsample": 1.0,
+        "colsample_bytree": 1.0,
+        "reg_lambda": 1.0
+      },
+      {
+        "max_depth": 3,
+        "learning_rate": 0.03,
+        "min_child_weight": 5,
+        "subsample": 1.0,
+        "colsample_bytree": 1.0,
+        "reg_lambda": 10.0
+      },
+      {
+        "max_depth": 3,
+        "learning_rate": 0.07,
+        "min_child_weight": 5,
+        "subsample": 1.0,
+        "colsample_bytree": 1.0,
+        "reg_lambda": 10.0
+      }
+    ],
+    "search_model_seed": 42,
+    "fixed": {
+      "objective": "reg:squarederror",
+      "tree_method": "hist",
+      "device": "cpu",
+      "n_jobs": 4,
+      "max_bin": 64,
+      "n_estimators": 2000,
+      "early_stopping_rounds": 50,
+      "eval_metric": "mae",
+      "gamma": 0.0,
+      "reg_alpha": 0.0
+    },
+    "final_round_rule": "separate observed-Validation MAE early stopping for every condition/seed; selected hyperparameters fixed across conditions within family/fold; predictions use best_iteration+1 trees",
+    "final_models": 42
+  },
+  "threshold_cv": {
+    "heat_grid": [
+      10,
+      14,
+      18,
+      22
+    ],
+    "cool_grid": [
+      18,
+      22,
+      26,
+      30
+    ],
+    "pair_condition": "heat<=cool",
+    "ridge_alpha": 10.0,
+    "predictors": "causal LOAD lags1/24/168 +22 source calendar channels +heating/cooling excess",
+    "folds": {
+      "warm_late_summer": [
+        {
+          "id": 1,
+          "train_start": "2024-08-04",
+          "train_end_exclusive": "2025-02-01",
+          "validation_start": "2025-02-01",
+          "validation_end_exclusive": "2025-03-19"
+        },
+        {
+          "id": 2,
+          "train_start": "2024-08-04",
+          "train_end_exclusive": "2025-03-19",
+          "validation_start": "2025-03-19",
+          "validation_end_exclusive": "2025-05-04"
+        },
+        {
+          "id": 3,
+          "train_start": "2024-08-04",
+          "train_end_exclusive": "2025-05-04",
+          "validation_start": "2025-05-04",
+          "validation_end_exclusive": "2025-06-19"
+        },
+        {
+          "id": 4,
+          "train_start": "2024-08-04",
+          "train_end_exclusive": "2025-06-19",
+          "validation_start": "2025-06-19",
+          "validation_end_exclusive": "2025-08-04"
+        }
+      ],
+      "cold": [
+        {
+          "id": 1,
+          "train_start": "2024-11-03",
+          "train_end_exclusive": "2025-05-03",
+          "validation_start": "2025-05-03",
+          "validation_end_exclusive": "2025-06-18"
+        },
+        {
+          "id": 2,
+          "train_start": "2024-11-03",
+          "train_end_exclusive": "2025-06-18",
+          "validation_start": "2025-06-18",
+          "validation_end_exclusive": "2025-08-03"
+        },
+        {
+          "id": 3,
+          "train_start": "2024-11-03",
+          "train_end_exclusive": "2025-08-03",
+          "validation_start": "2025-08-03",
+          "validation_end_exclusive": "2025-09-18"
+        },
+        {
+          "id": 4,
+          "train_start": "2024-11-03",
+          "train_end_exclusive": "2025-09-18",
+          "validation_start": "2025-09-18",
+          "validation_end_exclusive": "2025-11-03"
+        }
+      ]
+    },
+    "prefix_lengths_days": [
+      181,
+      227,
+      273,
+      319
+    ],
+    "validation_days": 46,
+    "support": "each candidate needs >=100 observed LOAD+temperature target rows strictly below and strictly above EACH threshold in EVERY inner training prefix",
+    "validation_support": "report; no deletion of validation rows/regimes",
+    "criterion": "equal mean of four inner MeanDailyWAPEs",
+    "tie_break": "exact score tie: ascending heat then ascending cool",
+    "preprocessing": "weather median and StandardScaler fit prefix only; LOAD uses past donors only",
+    "no_valid_pair": "hard fail before main fits; no after-Evaluation fallback",
+    "pre_error_support_result": "warm15 valid pairs; cold7 valid pairs (cool18/22 only); cool26/30 fail earliest prefix support",
+    "scope": "auxiliary Ridge fits excluded42; no grid enlargement"
+  },
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20260926,
+    "confidence": 0.95,
+    "paired_days": true,
+    "moving_block_days": 3,
+    "circular": false
+  }
+}

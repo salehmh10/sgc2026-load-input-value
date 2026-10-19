@@ -1,0 +1,31 @@
+name: Reproduce publication artifacts
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      MPLBACKEND: Agg
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install the light reproducibility environment
+        run: python -m pip install '.[dev]'
+      - name: Test scientific controls and reference artifacts
+        run: python -m pytest -q
+      - name: Reproduce figures and tables
+        run: python scripts/reproduce_artifacts.py
+      - name: Audit publication files
+        run: python scripts/audit_release.py
