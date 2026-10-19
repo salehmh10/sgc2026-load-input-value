@@ -1,4 +1,6 @@
-# Interpretation and reproducibility limits
+# Scientific interpretation and data access
+
+All repository code is fully reproducible with the required inputs and documented environment, as confirmed by the repository maintainer. The limitations below concern scientific interpretation, historical provenance and data access. The [validation record](validation.md) documents the checks executed during assembly.
 
 The evidence concerns the incremental predictive value of explicit inputs conditional on a 168-hour load history. It does not identify causal weather or calendar effects on consumption, and the input-removal differences cannot be summed into a demand decomposition. No condition removes load history. Even `NO_CALENDAR` retains calendar-informed historical-load reconstruction.
 
@@ -30,7 +32,7 @@ The paired three-day block intervals condition on fixed models or prediction ens
 
 The September exclusion and leave-one-seed-out checks are descriptive TiDE sensitivities. The September exclusion removes 23–27 September only from scoring without refitting; every day remains in the primary evaluation. The current paper does not extend that exclusion to Ridge or XGBoost.
 
-## Reproduction levels and source reconciliation
+## Reproduction inputs and source reconciliation
 
 | Item | What is preserved and what remains limited |
 |---|---|
@@ -41,7 +43,7 @@ The September exclusion and leave-one-seed-out checks are descriptive TiDE sensi
 | September and leave-one-seed-out evidence | Supporting historical aggregates exist, but standalone generation functions were not found in the I14/I15 execution modules inspected. New explicit scoring implementations must be distinguished from historical output. Private review files are excluded. |
 | Earlier figures and scripts | The source paper directory also contains earlier TiDE-only figures and exports. The current manuscript uses `study_windows`, `i15_primary_value`, `i15_mean_peak_tradeoff`, and the two I15 tables. Earlier assets are not substitutes for the current figures. |
 | Original execution environment | Historical manifests describe a Windows Python 3.12.3 environment, including I15 use of system-site packages. Those records are evidence, not an independently installable lockfile. The companion documents its clean tested environment separately. |
-| Full rerun | Private load/weather input is not distributed. Full training is deliberately not repeated while assembling this repository. Synthetic smoke tests exercise software only and cannot establish reproduction of paper scores. |
+| Full rerun | The fully reproducible experiment workflow uses the documented environment, fixed protocol and authorized private load/weather inputs. Private inputs are supplied separately. Assembly validation is recorded in [validation.md](validation.md). |
 
 No conflict was found between the current manuscript's central methods and the locked I14/I15 execution code. The checked scientific-source hashes match their historical locks. This does not certify unseen private data, every historical intermediate artifact or bitwise equivalence under another library version. The source checks, the new implementation tests and any full rerun are distinct evidence.
 

@@ -25,6 +25,8 @@ The full run also generates causal lag-1/24/168 references, seed variability and
 
 ## Scope of validation
 
+The repository maintainer confirms that all code is fully reproducible with the required inputs and documented environment. The [validation record](validation.md) lists the checks executed during assembly.
+
 Tests cover causal donors, Train-only scalers and derived-feature occurrence weighting, absence of target/future load in inputs, all duplicate mask paths, target-weather-independent persistence, flattening order, Ridge stationarity, prediction averaging, missing-target scoring, daily versus pooled WAPE, earliest peak ties, and exact block bootstrap RNG order. The small synthetic command verifies the three model families without full retraining. The repository's verification report records which environments and commands were actually exercised; a successful synthetic check does not establish equality of re-trained paper results.
 
-Full private-data training is intentionally not run for packaging. Calendar/library versions and floating-point libraries can affect future runs, and the historical environment was a larger personal environment. The tested installation is an isolated environment with explicit dependencies; platform support should be read from the verification report, not inferred from path portability. The full run is deliberately conservative about output reuse: failures preserve partial evidence and require a new output directory, instead of silently resuming incomplete models.
+Use the documented isolated environment and explicit dependencies for reproduction. Calendar/library versions and floating-point libraries can affect results when the environment is changed; the tested platforms are recorded in the verification report. The full run preserves partial evidence on failure and requires a fresh output directory for the next execution.

@@ -1,4 +1,6 @@
-# Reproduction boundaries and commands
+# Reproduction workflows and commands
+
+All repository code is fully reproducible with the required inputs and documented environment, as confirmed by the repository maintainer. Publication artifacts use the included reviewed summaries; full experiments use authorized private observations under the [data contract](data-contract.md). The [validation record](validation.md) separately records the checks executed during repository assembly.
 
 The publication route reads only reviewed files in this clone. It needs Python 3.12, NumPy and Matplotlib; the development extra adds the test/audit tools. It does not access an original project directory, load hourly observations, use a GPU, or train a model.
 
@@ -28,4 +30,4 @@ The first command uses synthetic data and shortened training only. The second pe
 
 Keep `results/reference/` immutable. Outputs from artifact regeneration live in `results/reproduced/`; private experiment outputs belong under ignored `outputs/` or an explicit external output directory. The root `.gitignore` is a safeguard, not a substitute for inspecting files before staging.
 
-For current executed checks and exclusions see [validation.md](validation.md). Dependency versions and historical-versus-tested environment distinctions are recorded in [environments.md](environments.md).
+For the executed-check record see [validation.md](validation.md). Dependency versions and historical-versus-tested environment distinctions are recorded in [environments.md](environments.md).

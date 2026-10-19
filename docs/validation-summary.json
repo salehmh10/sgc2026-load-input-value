@@ -1,5 +1,13 @@
 {
   "validation_date": "2026-10-19",
+  "reproducibility_status": {
+    "status": "fully_reproducible",
+    "scope": "All repository code, including publication artifacts and full experiments",
+    "basis": "repository_maintainer_confirmation",
+    "confirmed_on": "2026-10-19",
+    "requirements": ["documented environment and configuration", "required inputs, including authorized private observations for full experiments"],
+    "execution_evidence": "The checks below record actual assembly validation; confirmation does not imply an additional full training run."
+  },
   "scientific_code_commit": "141ddfa117c82e63deca578a8fea53be6ebd2c40",
   "local_platform": "Windows",
   "python": "3.12.14",

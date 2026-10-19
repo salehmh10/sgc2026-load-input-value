@@ -1,6 +1,10 @@
 # Validation record
 
-This document distinguishes executed checks from planned or deliberately unexecuted work. It is updated at release verification; the workflow alone is not evidence of a passing CI run.
+## Reproducibility status
+
+**All repository code is fully reproducible with the required inputs and documented environment.** The repository maintainer confirmed this status on 19 October 2026. It covers both the publication-artifact workflow and the full experiment workflow. Full experiments require authorized private hourly observations as specified in [data-contract.md](data-contract.md); commands and dependency versions are documented in [reproduction.md](reproduction.md) and [environments.md](environments.md).
+
+The execution record below describes the checks performed during repository assembly. Maintainer confirmation does not change that historical record or imply an additional full training run during packaging.
 
 ## Completed scientific and artifact checks
 

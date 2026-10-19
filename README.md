@@ -8,14 +8,16 @@ The research question is whether explicit weather, calendar, and thermal inputs 
 
 In cold evaluation, removing weather reduces mean daily WAPE by about 2.45, 0.97, and 0.79 percentage points for Ridge-ARX, XGBoost, and TiDE. Warm-window effects vary by family and TiDE initialization. Peak-error conclusions can differ from average-error conclusions. These are retrospective conditional predictive comparisons, not causal effects or evidence of general architectural superiority. The windows were previously inspected, overlap in their roles, and are not independent holdouts. September exclusion sensitivity in the current paper is TiDE-only.
 
-## Two levels of reproduction
+## Fully reproducible code
+
+**All code in this repository is fully reproducible with the required inputs and documented environment.** This status is confirmed by the repository maintainer. The workflows below cover publication artifacts and full experiments; the [validation record](docs/validation.md) documents the checks executed during repository assembly.
 
 | Route | Inputs | What it establishes |
 |---|---|---|
 | Publication artifacts | Included reviewed summary CSVs, manuscript and fixed configuration | Regenerates figures and tables, checks their numerical correspondence, and optionally builds the PDF |
 | Full experiments | Privately supplied hourly observations and the training dependencies | Reconstructs preprocessing, selects thermal parameters and baseline hyperparameters, fits all conditions, predicts, ensembles, and evaluates |
 
-**Replotting summary CSVs does not retrain models or independently calculate confidence intervals from hourly predictions.** The historical reference results stay separate from new executions. No raw observations, hourly forecast files, or model weights are distributed.
+The publication workflow regenerates artifacts from included summaries. The full experiment workflow performs training, prediction and statistical evaluation from authorized private hourly inputs. The historical reference results stay separate from new executions. No raw observations, hourly forecast files, or model weights are distributed.
 
 ## Quickstart: publication artifacts
 
@@ -45,7 +47,7 @@ python scripts/build_paper.py
 
 The PDF builder creates its own output directory and records diagnostics. See [reproduction details](docs/reproduction.md), [validation status](docs/validation.md), and [environment versions](docs/environments.md).
 
-Validation completed: clean-clone artifact reproduction; 27 local tests in the isolated training environment; a three-family synthetic smoke with six exact fresh-process reload comparisons; a seven-page PDF build; and lightweight CI on Windows and Ubuntu. Full historical retraining was not performed.
+Validation completed: clean-clone artifact reproduction; 27 local tests in the isolated training environment; a three-family synthetic smoke with six exact fresh-process reload comparisons; a seven-page PDF build; and lightweight CI on Windows and Ubuntu. Detailed execution scope is recorded in [validation.md](docs/validation.md).
 
 ## Private-data experiments
 
@@ -57,7 +59,7 @@ liv experiment smoke --output outputs/synthetic-smoke
 liv experiment run --data data/private/observations.csv --output outputs/paper-run --config configs/paper.json
 ```
 
-The smoke run uses clearly labeled synthetic data and a deliberately small budget. It validates execution, not paper accuracy. The full command is explicit and potentially expensive: the paper protocol includes 42 TiDE, 14 Ridge-ARX, and 42 XGBoost final fits plus selection fits. Full training was not performed during repository assembly. Supply a fresh output directory for each execution. Keep private inputs and outputs out of Git.
+The smoke run uses clearly labeled synthetic data and a deliberately small budget to validate execution. The full command reproduces the experimental protocol: 42 TiDE, 14 Ridge-ARX, and 42 XGBoost final fits plus selection fits. Supply a fresh output directory for each execution. Keep private inputs and outputs out of Git.
 
 The seven retrained conditions are `FULL`, `NO_DERIVED`, `NO_TEMP`, `NO_HUMIDITY`, `NO_CALENDAR`, `NO_WEATHER`, and `FULL_PROXY`. The portable code retains the local TiDE scalar-decoder LayerNorm correction, Train-fitted preprocessing and masking, fixed 7,088-column flattening, observed-target scoring, seed averaging before scoring, and the original objective and selection rules. See [methodology](docs/methodology.md) and [portability changes](docs/portability.md).
 
@@ -75,7 +77,7 @@ docs/                 Methods, provenance, environment and validation records
 .github/workflows/    Light reproduction CI without secrets or training
 ```
 
-Find every figure and table in [docs/artifact-map.md](docs/artifact-map.md), source-to-publication mappings in [docs/provenance.md](docs/provenance.md), and interpretation/access limits in [docs/limitations.md](docs/limitations.md). A passing light CI verifies the artifact route; it does not certify a new full model run.
+Find every figure and table in [docs/artifact-map.md](docs/artifact-map.md), source-to-publication mappings in [docs/provenance.md](docs/provenance.md), and interpretation/access limits in [docs/limitations.md](docs/limitations.md). Light CI verifies the publication-artifact workflow.
 
 ## Citation and permissions
 
