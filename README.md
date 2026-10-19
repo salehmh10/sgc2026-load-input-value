@@ -45,6 +45,8 @@ python scripts/build_paper.py
 
 The PDF builder creates its own output directory and records diagnostics. See [reproduction details](docs/reproduction.md), [validation status](docs/validation.md), and [environment versions](docs/environments.md).
 
+Validation completed: clean-clone artifact reproduction; 27 local tests in the isolated training environment; a three-family synthetic smoke with six exact fresh-process reload comparisons; a seven-page PDF build; and lightweight CI on Windows and Ubuntu. Full historical retraining was not performed.
+
 ## Private-data experiments
 
 Install the separate training dependencies in an isolated environment. The source CSV must satisfy [the data contract](docs/data-contract.md). Its path is supplied explicitly; no original project folder, saved private cache, or user profile is required.

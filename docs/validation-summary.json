@@ -1,0 +1,45 @@
+{
+  "validation_date": "2026-10-19",
+  "scientific_code_commit": "141ddfa117c82e63deca578a8fea53be6ebd2c40",
+  "local_platform": "Windows",
+  "python": "3.12.14",
+  "system_site_packages": false,
+  "light_clone_tests": {"passed": 17, "skipped_modules": 1},
+  "training_environment_tests": {"passed": 27, "failed": 0},
+  "source_access_guard": {
+    "commands_passed": 8,
+    "python_processes": 13,
+    "unexpected_access_attempts": 0,
+    "scope": "Python audit hook and inherited Python children; not native OS isolation"
+  },
+  "artifacts": {
+    "accuracy_rows": 84,
+    "contrast_rows": 72,
+    "seed_rows": 24,
+    "stored_interval_bounds": 384,
+    "plot_points": 48,
+    "numeric_table_cells": 66,
+    "inherited_persistence_cells": 6,
+    "pdf_pages": 7,
+    "unresolved_references_or_citations": 0,
+    "visual_inspection": "All seven pages and three figures",
+    "independent_hourly_bootstrap_recomputed": false
+  },
+  "synthetic_model_smoke": {
+    "completed": true,
+    "final_models": 3,
+    "selection_fits": 2,
+    "prediction_rows": 144,
+    "fresh_process_reload_comparisons": 6,
+    "maximum_prediction_difference_kw": 0.0,
+    "full_paper_training": false,
+    "scope": "Synthetic FULL-only fits, one seed, one TiDE epoch, two XGBoost trees, fixed synthetic thermal thresholds"
+  },
+  "ci": {
+    "run": "https://github.com/salehmh10/sgc2026-load-input-value/actions/runs/39304142776",
+    "windows": "success",
+    "ubuntu": "success",
+    "scope": "Light tests, artifact regeneration and publication audit; no model training"
+  },
+  "outstanding_editorial_information": ["confirmed authors and affiliations", "software license selection"]
+}
