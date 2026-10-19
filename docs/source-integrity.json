@@ -3,7 +3,7 @@
   "changed_files": 0,
   "additional_run_manifests_checked": 99,
   "additional_inventory_timing": "These 99 run result manifests were read as JSON for fit-count checks before discovering that the initial baseline excluded them. They were never executed or written. Their first digest inventory was recorded after that read; this is explicitly not a pre-read hash claim.",
-  "mapped_source_files": 47,
+  "mapped_source_files": 49,
   "method": "SHA-256 before assembly and after validation, read-only source access",
   "private_inventory": "Retained locally outside the Git publication surface; contains absolute paths",
   "scope": "Source manuscript, code, protocols, scientific summaries and selected supporting artifacts; excluded private models/caches/predictions were not used"

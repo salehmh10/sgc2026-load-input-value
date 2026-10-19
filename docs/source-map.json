@@ -42,10 +42,24 @@
     "handling": "Portable adaptation; scientific controls reviewed independently"
   },
   {
+    "source": "CODES/1_hour/iteration15_statistical_ml_baselines/i15_training.py",
+    "publication": "src/load_input_value/experiments.py",
+    "source_sha256": "062ced67d8bad009308c1a95ebea1310220e8d7b0ecf1d38eb8bd1f4661df39c",
+    "publication_sha256": "e9efd6cc4bb8beda2341c70453fa9c7177b7dc245817b365863fe4bcddd201af",
+    "handling": "Portable adaptation; scientific controls reviewed independently"
+  },
+  {
     "source": "CODES/1_hour/iteration14_weather_calendar_value_warm_cold/study_training.py",
     "publication": "src/load_input_value/training.py",
     "source_sha256": "f23d5012ddbb2b1ec45b097cea8375876041e41389ac66f44c5295013287cebc",
     "publication_sha256": "edaedd61fb522a16dc9c70008e9aeae2d7e9eabc5ddf2ab7e18170096e09f1fa",
+    "handling": "Portable adaptation; scientific controls reviewed independently"
+  },
+  {
+    "source": "CODES/1_hour/iteration14_weather_calendar_value_warm_cold/study_training.py",
+    "publication": "src/load_input_value/tide.py",
+    "source_sha256": "f23d5012ddbb2b1ec45b097cea8375876041e41389ac66f44c5295013287cebc",
+    "publication_sha256": "6c5b54636365a45faf2a6a3f09c5a3560a36ae9b17dd8fe87365b861d47f1f7f",
     "handling": "Portable adaptation; scientific controls reviewed independently"
   },
   {
@@ -81,6 +95,20 @@
     "publication": "configs/paper.json",
     "source_sha256": "0d70c62d57ea93ed55e597d90129b294bfca6c58654698c3ae0cfe6bd5c82b0d",
     "publication_sha256": "d3e3643ba7679e4fcbd86ec2c9758ac96883bee4c634324c97a378b9bd3add90",
+    "handling": "Portable adaptation; scientific controls reviewed independently"
+  },
+  {
+    "source": "CODES/1_hour/iteration15_statistical_ml_baselines/i15_common.py",
+    "publication": "src/load_input_value/io.py",
+    "source_sha256": "391cd605b095a38ac399a5256e04da3ae9e1d50776d3b2c1d6b47d96226689ff",
+    "publication_sha256": "9f9555398a05394a524ed30ada353946c3d8d4c3affd0e023af9b850709c3472",
+    "handling": "Portable adaptation; scientific controls reviewed independently"
+  },
+  {
+    "source": "CODES/1_hour/iteration14_weather_calendar_value_warm_cold/study_common.py",
+    "publication": "src/load_input_value/protocol.py",
+    "source_sha256": "4edf37fdceefdddf30be7870d758585a438b6d8ccf8c74ee374b71520e14af7a",
+    "publication_sha256": "0ba312a22c4513981174998fa9c7a3db202aaeb81b1f6452db4dc97c9828d373",
     "handling": "Portable adaptation; scientific controls reviewed independently"
   },
   {
