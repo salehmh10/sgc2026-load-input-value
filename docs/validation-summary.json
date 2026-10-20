@@ -49,5 +49,6 @@
     "ubuntu": "success",
     "scope": "Light tests, artifact regeneration and publication audit; no model training"
   },
-  "outstanding_editorial_information": ["confirmed authors and affiliations", "software license selection"]
+  "software_license": {"spdx": "MIT", "selected_on": "2026-10-20", "scope_document": "LICENSE-STATUS.md"},
+  "outstanding_editorial_information": ["confirmed authors and affiliations"]
 }

@@ -5,6 +5,7 @@ cff-version: 1.2.0
 message: "Citation metadata is provisional. Confirm the author list before citing this research companion."
 title: "Incremental Value of Weather and Calendar Inputs in Hour-Ahead Load Forecasting"
 type: software
+license: MIT
 version: 0.1.0
 repository-code: "https://github.com/salehmh10/sgc2026-load-input-value"
 # authors: REQUIRED; no identities are inferred.

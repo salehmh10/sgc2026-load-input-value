@@ -10,5 +10,5 @@ This is a research companion to the manuscript named in README.md.
 - Importing library modules must not read private data, train models, create caches, or change environment settings.
 - Public artifact reproduction does not retrain models or independently calculate intervals from hourly forecasts.
 - Before a commit run the tests, artifact validation and scripts/audit_release.py. Check staged filenames and content as well as the working tree.
-- Preserve dependency and LaTeX notices. No general software license has been selected; do not assign one or invent authors, affiliations, DOI, publication or acceptance status.
+- The owner selected MIT for the software; preserve LICENSE and the scope in LICENSE-STATUS.md, including separate manuscript/data rights and dependency/LaTeX notices. Do not invent authors, affiliations, DOI, publication or acceptance status.
 - Use English for code and scientific documentation. Report unexecuted checks honestly.

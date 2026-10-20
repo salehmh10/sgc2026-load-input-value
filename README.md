@@ -1,6 +1,6 @@
 # Incremental Value of Weather and Calendar Inputs in Hour-Ahead Load Forecasting
 
-Research companion for the current manuscript draft. The repository name identifies the intended project; conference acceptance, a publication date, and a DOI have not been verified. Author information is awaiting confirmation. This repository is private and contains selected publication aggregates, portable experiment code, and the manuscript source.
+Research companion for the current manuscript draft. The repository name identifies the intended project; conference acceptance, a publication date, and a DOI have not been verified. Author information is awaiting confirmation. This repository contains selected publication aggregates, portable experiment code, and the manuscript source.
 
 The research question is whether explicit weather, calendar, and thermal inputs add forecasting value when 168 hours of recent load are already available. Ridge-ARX, XGBoost, and a locally corrected TiDE provide three different model families under matched inputs. Each forecasts one hour ahead with fixed fitted weights and updated observed history.
 
@@ -83,4 +83,4 @@ Find every figure and table in [docs/artifact-map.md](docs/artifact-map.md), sou
 
 The exact manuscript title above and this repository's URL are currently confirmed. Author identities, affiliations, and corresponding-author information have not been supplied. [CITATION.cff.in](CITATION.cff.in) is an explicitly incomplete template, not valid final citation metadata; it must be completed with confirmed authors before becoming `CITATION.cff`. No author, DOI, or acceptance status is inferred from a GitHub account.
 
-No general software license has been chosen. See [LICENSE-STATUS.md](LICENSE-STATUS.md). Existing third-party LaTeX notices are preserved in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Any future code license must be distinguished from rights to the manuscript and underlying data.
+The code and associated software documentation are licensed under the [MIT License](LICENSE). See [LICENSE-STATUS.md](LICENSE-STATUS.md) for its scope: the manuscript, publication figures/tables, reference results and underlying data retain separate rights. Existing third-party LaTeX and dependency notices are preserved in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
