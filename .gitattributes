@@ -10,7 +10,3 @@
 *.png binary
 # Historical reference artifacts preserve their admitted bytes, including CRLF.
 results/reference/** -text
-paper/IEEEtran.cls -text
-paper/IEEEtran.bst -text
-paper/tex-support/upstream/** -text
-paper/*.sty -text

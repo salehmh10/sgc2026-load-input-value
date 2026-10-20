@@ -1,6 +1,6 @@
 # Source and execution provenance
 
-The manuscript and historical summaries were selected from the current paper directory and the I14/I15 experiments. Earlier iterations supplied methodological context only; the distributed pipeline does not execute them or read their private artifacts.
+The scientific code and historical summaries were selected from the current research project and the I14/I15 experiments. Earlier iterations supplied methodological context only; the distributed pipeline does not execute them or read their private artifacts. The current distribution excludes the manuscript text, bibliography and TeX support bundle.
 
 [source-map.json](source-map.json) records each imported or adapted scientific source, its SHA-256, the publication destination, and the destination checksum. Source names are relative to the original research project, without personal absolute paths. The detailed local inventory remains private. [source-integrity.json](source-integrity.json) reports the before/after SHA-256 check of the source files used and supporting scientific files inventoried at assembly.
 
@@ -10,8 +10,11 @@ The manuscript and historical summaries were selected from the current paper dir
 | I15 baselines and evaluation | `src/load_input_value/` | Exact input order, objective, selection, metrics and bootstrap definitions; fresh execution manifests |
 | I14/I15 protocols | `configs/paper.json` | Scientific settings selected into an anonymous configuration; historical path/host details omitted |
 | Current paper's reviewed summary CSVs | `results/reference/` | Admitted aggregate values preserved; original reference checksums retained |
-| Current manuscript, bibliography and support files | `paper/` | Scientific text retained; conditions table factored into a file; build metadata suppressed; existing notices retained |
+| Condition-definition table | `results/reference/expected-tables/conditions.tex` | Fixed protocol table retained independently of manuscript source |
+| Reviewed primary-value figure | `docs/assets/i15_primary_value.png` | README illustration retained; all research figures can be regenerated |
 | Current plot script | `scripts/reproduce_artifacts.py` | Portable inputs, separate generated outputs and explicit numerical checks |
+
+The current source map lists surviving destinations only. Original source hashes identify the versions used when each item was first extracted; publication hashes identify the current distributed files. The manuscript and its support files remain in earlier Git revisions; removing them from the current tree does not erase public history. The original source-integrity counts and historical PDF checks remain dated assembly evidence, not a claim that the manuscript bundle is still distributed.
 
 `results/reference/SHA256SUMS.json` is the byte-integrity authority for fixed reference assets. A mismatch is an error; do not regenerate the manifest to conceal changed reference data. The manuscript's rounded tables and plot points are additionally validated numerically, independently of renderer-dependent image bytes.
 

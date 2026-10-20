@@ -1,6 +1,8 @@
-"""Regenerate the manuscript assets from admitted publication summaries only.
+"""Regenerate scientific figures and tables from publication aggregates.
 
-This does not train models or independently recompute bootstrap intervals.
+Defaults to the immutable historical summaries. An explicit --data-dir accepts
+aggregates exported from a newly completed full experiment. This renderer does
+not train models or independently recompute bootstrap intervals.
 Run from any working directory; output paths are repository-relative by default.
 """
 from __future__ import annotations
@@ -14,6 +16,7 @@ import hashlib
 import json
 from pathlib import Path
 import warnings
+from decimal import Decimal, ROUND_HALF_EVEN
 
 import matplotlib
 matplotlib.use("Agg")
@@ -26,6 +29,8 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "results" / "reference"
+REFERENCE = DATA
+NEW_EXECUTION = False
 OUTPUT = ROOT / "results" / "reproduced"
 OUT, TABLES, VALIDATION = OUTPUT / "figures", OUTPUT / "tables", OUTPUT / "validation"
 FAMILIES = ["Ridge-ARX", "XGBoost", "TiDE"]
@@ -91,8 +96,14 @@ def primary_value(contrasts: list[dict], seeds: list[dict]) -> None:
             r = lookup[(fold, family, arm)]
             delta, low, high = [float(r[k]) for k in ["delta_percentage_points", "block3_CI_low", "block3_CI_high"]]
             center_y = i - (0.09 if family != "Ridge-ARX" else 0)
-            ax.errorbar(delta, center_y, xerr=[[delta-low], [high-delta]], fmt="D", ms=3.7,
-                        color=COLORS[family], ecolor=COLORS[family], capsize=2.1, elinewidth=1.05, capthick=0.7, zorder=4)
+            if NEW_EXECUTION:
+                # A bootstrap interval need not contain its point estimate.
+                ax.hlines(center_y, low, high, color=COLORS[family], linewidth=1.05, zorder=4)
+                ax.vlines([low, high], center_y-.05, center_y+.05, color=COLORS[family], linewidth=.7, zorder=4)
+                ax.plot(delta, center_y, "D", ms=3.7, color=COLORS[family], zorder=4)
+            else:
+                ax.errorbar(delta, center_y, xerr=[[delta-low], [high-delta]], fmt="D", ms=3.7,
+                            color=COLORS[family], ecolor=COLORS[family], capsize=2.1, elinewidth=1.05, capthick=0.7, zorder=4)
             DRAWN.append({"figure": "i15_primary_value", "fold": fold, "family": family, "arm": arm,
                           "kind": r["seed"], "x": delta, "y": center_y, "CI_low": low, "CI_high": high})
             if family != "Ridge-ARX":
@@ -108,6 +119,14 @@ def primary_value(contrasts: list[dict], seeds: list[dict]) -> None:
         ax.set_ylim(5.55, -0.55)
         ax.set_yticks(range(6), labels)
         clean(ax)
+    if NEW_EXECUTION:
+        values = [0.] + [float(row[field]) for row in contrasts if row["partition"] == "Evaluation"
+                         and row["arm"] in PRIMARY for field in ("delta_percentage_points", "block3_CI_low", "block3_CI_high")]
+        values += [float(row["delta_percentage_points"]) for row in seeds]
+        low, high = min(values), max(values)
+        pad = max((high-low)*.1, .1)
+        axes[0].set_xlim(low-pad, high+pad)
+        axes[0].xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(7))
     axes[0].text(-0.245, 0.755, "No weather", transform=axes[0].transAxes, ha="center", va="center", rotation=90, fontsize=8.5)
     axes[0].text(-0.245, 0.265, "No temperature", transform=axes[0].transAxes, ha="center", va="center", rotation=90, fontsize=8.5)
     handles = [Line2D([0], [0], color="0.25", marker="D", ms=3.7, lw=1, label="Estimate + 95% block CI")]
@@ -122,7 +141,11 @@ def mean_peak(contrasts: list[dict]) -> None:
     lookup = {(r["fold"], r["family"], r["arm"]): r for r in contrasts if r["partition"] == "Evaluation"}
     fig, axes = plt.subplots(2, 1, figsize=(3.48, 3.05), sharex=True)
     fig.subplots_adjust(left=0.21, right=0.975, bottom=0.17, top=0.77, hspace=0.40)
-    for ax, fold, title in zip(axes, FOLDS, ["(a) Warm · 10 complete days", "(b) Cold · 25 complete days"]):
+    titles = ["(a) Warm · 10 complete days", "(b) Cold · 25 complete days"]
+    if NEW_EXECUTION:
+        titles = [f"({letter}) {label} · {lookup[(fold, 'Ridge-ARX', 'NO_WEATHER')]['CompleteDays']} complete days"
+                  for letter, label, fold in zip("ab", ["Warm", "Cold"], FOLDS)]
+    for ax, fold, title in zip(axes, FOLDS, titles):
         ax.axhline(0, color="0.45", lw=0.6, ls=(0, (3, 2)))
         ax.axvline(0, color="0.45", lw=0.6, ls=(0, (3, 2)))
         ax.plot(0, 0, "+", color="black", ms=5, mew=0.8, zorder=4)
@@ -142,6 +165,20 @@ def mean_peak(contrasts: list[dict]) -> None:
             ax.set_ylim(-2050, 700)
             ax.set_yticks([-2000, -1000, 0])
         clean(ax, grid=False)
+        if NEW_EXECUTION:
+            yvalues = [0.] + [float(lookup[(fold, family, arm)]["delta_PeakMagnitudeMAE_kW"])
+                             for family in FAMILIES for arm in PRIMARY]
+            low, high = min(yvalues), max(yvalues)
+            pad = max((high-low)*.15, 1.)
+            ax.set_ylim(low-pad, high+pad)
+            ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(5))
+    if NEW_EXECUTION:
+        values = [0.] + [float(row["delta_percentage_points"]) for row in contrasts
+                         if row["partition"] == "Evaluation" and row["arm"] in PRIMARY]
+        low, high = min(values), max(values)
+        pad = max((high-low)*.15, .1)
+        axes[0].set_xlim(low-pad, high+pad)
+        axes[0].xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(6))
     family_handles = [Line2D([0], [0], marker="o", color=COLORS[f], ls="none", ms=4, label=f) for f in FAMILIES]
     condition_handles = [Line2D([0], [0], marker=m, color="0.25", ls="none", ms=4, label=l)
                          for m, l in [("o", "No weather"), ("^", "No temperature")]]
@@ -155,13 +192,24 @@ def mean_peak(contrasts: list[dict]) -> None:
 def tables(accuracy: list[dict], contrasts: list[dict]) -> None:
     scores = {(r["fold"], r["family"], r["arm"]): r for r in accuracy if r["partition"] == "Evaluation"}
     lines = [r"\begin{table*}[t]", r"\caption{Evaluation mean daily WAPE (\%). Ridge-ARX is deterministic; XGBoost and TiDE use the mean prediction of three seeds. Each window contains 28 days and 626 (warm) or 669 (cold) observed targets. Persistence references use the same reconstructed history and observed targets.}", r"\label{tab:results}", r"\centering", r"\begin{tabular}{@{}lrrrcrrr@{}}", r"\toprule", r"& \multicolumn{3}{c}{Warm} && \multicolumn{3}{c}{Cold}\\", r"\cmidrule(lr){2-4}\cmidrule(l){6-8}", r"Condition & Ridge-ARX & XGBoost & TiDE && Ridge-ARX & XGBoost & TiDE\\", r"\midrule"]
+    if NEW_EXECUTION:
+        counts = "; ".join(f"{label}: {scores[(fold, 'Ridge-ARX', 'FULL')]['Days']} days, "
+                           f"{scores[(fold, 'Ridge-ARX', 'FULL')]['ObservedHours']} observed targets"
+                           for label, fold in zip(["warm", "cold"], FOLDS))
+        lines[1] = (r"\caption{Evaluation mean daily WAPE (\%). Ridge-ARX is deterministic; "
+                    "XGBoost and TiDE use the mean prediction of three seeds. "
+                    + counts + ". Persistence references use the same reconstructed history and observed targets.}")
     for arm in ARMS:
-        cells = [[f"{float(scores[(fold, family, arm)]['MeanDailyWAPE']):.2f}" for family in FAMILIES] for fold in FOLDS]
+        cells = [[str(Decimal(scores[(fold, family, arm)]["MeanDailyWAPE"]).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_EVEN)) for family in FAMILIES] for fold in FOLDS]
         lines.append(ARM_LABELS[arm] + " & " + " & ".join(cells[0]) + " && " + " & ".join(cells[1]) + r"\\")
     lines.append(r"\midrule")
     references = read("i15_simple_references.csv")
     for reference in references:
         label, warm, cold = [reference[k] for k in ["reference", "warm_mean_daily_WAPE_percent", "cold_mean_daily_WAPE_percent"]]
+        if NEW_EXECUTION:
+            warm, cold = [str(Decimal(value).quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN))
+                          for value in (warm, cold)]
         lines.append(label + r" & \multicolumn{3}{c}{" + warm + r"} && \multicolumn{3}{c}{" + cold + r"}\\")
     lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table*}"])
     (TABLES / "i15_accuracy.tex").write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -169,7 +217,8 @@ def tables(accuracy: list[dict], contrasts: list[dict]) -> None:
     lines = [r"\begin{table}[t]", r"\caption{Changes in mean daily WAPE relative to \full\ (pp). W: no weather; T: no temperature. Val: validation; Eval: evaluation. Positive differences favor \full; $+0.00$ denotes a rounded positive value.}", r"\label{tab:contrasts}", r"\centering", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{@{}llrrrr@{}}", r"\toprule", r"&& \multicolumn{2}{c}{Warm} & \multicolumn{2}{c}{Cold}\\", r"\cmidrule(lr){3-4}\cmidrule(l){5-6}", r"Model & Removed & Val & Eval & Val & Eval\\", r"\midrule"]
     for family in FAMILIES:
         for j, arm in enumerate(PRIMARY):
-            cells = [f"${float(differences[(fold, family, arm, part)]['delta_percentage_points']):+.2f}$" for fold in FOLDS for part in ["Validation", "Evaluation"]]
+            cells = [f"${Decimal(differences[(fold, family, arm, part)]['delta_percentage_points']).quantize(Decimal('0.01'), rounding=ROUND_HALF_EVEN):+.2f}$"
+                     for fold in FOLDS for part in ["Validation", "Evaluation"]]
             lines.append((family if j == 0 else "") + " & " + ("W" if arm == "NO_WEATHER" else "T") + " & " + " & ".join(cells) + r"\\")
     lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}"])
     (TABLES / "i15_validation.tex").write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -203,7 +252,7 @@ def study_windows() -> None:
             end = mdates.date2num(datetime.fromisoformat(r["end_exclusive"]))
             ax.barh(y, end-start, left=start, height=0.32, color=colors[part], edgecolor="none", zorder=2)
             if part == "train":
-                ax.text((start+end)/2, y, "Train · 365 days", ha="center", va="center", fontsize=8.2)
+                ax.text((start+end)/2, y, f"Train · {r['days']} days", ha="center", va="center", fontsize=8.2)
             elif part == "validation":
                 ax.text((start+end)/2, y+0.28, "Val", ha="center", va="center", fontsize=8)
             else:
@@ -228,19 +277,38 @@ def study_windows() -> None:
     summaries.set_axis_off()
     ax.set_yticks([1, 0], ["Warm", "Cold"])
     ax.set_xlim(datetime(2024, 7, 22), datetime(2026, 1, 10))
+    if NEW_EXECUTION:
+        start = min(datetime.fromisoformat(row["start"]) for row in rows)
+        end = max(datetime.fromisoformat(row["end_exclusive"]) for row in rows)
+        pad = max((end-start) * .03, timedelta(days=1))
+        ax.set_xlim(start-pad, end+pad)
     ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[2, 5, 8, 11]))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b\n%Y"))
     clean(ax, grid=False)
     handles = [Patch(facecolor=colors[k], edgecolor="none", label=k.title()) for k in colors]
     fig.legend(handles=handles, ncol=3, frameon=False, loc="upper left", bbox_to_anchor=(0.08, 1.0), handlelength=1.5, columnspacing=2.0)
     fig.text(0.815, 0.92, "Evaluation weather", fontsize=9, weight="bold")
-    fig.text(0.085, 0.035, "Each validation/evaluation window: 28 days. Hatched dates: warm evaluation reused in cold training.", fontsize=8)
+    window_days = {row["days"] for row in rows if row["partition"] != "train"}
+    caption = (f"Each validation/evaluation window: {next(iter(window_days))} days. " if len(window_days) == 1
+               else "Validation/evaluation lengths are recorded in study_windows.csv. ")
+    fig.text(0.085, 0.035, caption + "Hatched dates: warm evaluation reused in cold training.", fontsize=8)
     save(fig, "study_windows")
 
 
 def verify_reference() -> dict:
     """Check admitted files and scientific identities without private inputs."""
     expected = json.loads((DATA / "SHA256SUMS.json").read_text(encoding="utf-8"))
+    if NEW_EXECUTION:
+        manifest = json.loads((DATA / "publication-export.json").read_text(encoding="utf-8"))
+        if manifest.get("origin") != "new_full_experiment" or manifest.get("historical_reference") is not False:
+            raise ValueError("--data-dir requires aggregates from a new completed full experiment.")
+        names = {"i15_accuracy.csv", "i15_contrasts.csv", "i15_primary_seed_points.csv",
+                 "i15_simple_references.csv", "study_windows.csv"}
+        if set(expected) != names or set(manifest["exports"]) != names:
+            raise ValueError("New-execution export does not contain the five publication tables.")
+        for name in names:
+            if manifest["exports"][name]["sha256"] != expected[name]:
+                raise ValueError("Export provenance and checksums disagree.")
     for name, digest in expected.items():
         if sha256(DATA / name) != digest:
             raise ValueError(f"Reference checksum mismatch: {name}")
@@ -343,25 +411,48 @@ def verify_rendered() -> dict:
         if cells[2:] != expected:
             raise ValueError("Contrast table cell or sign mismatch")
         cells_checked += len(expected)
-    for name in ["i15_accuracy.tex", "i15_validation.tex", "conditions.tex"]:
+    for reference in read("i15_simple_references.csv"):
+        values = [reference[k] for k in ("warm_mean_daily_WAPE_percent", "cold_mean_daily_WAPE_percent")]
+        if NEW_EXECUTION:
+            values = [str(Decimal(value).quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN))
+                      for value in values]
+        expected = reference["reference"] + r" & \multicolumn{3}{c}{" + values[0] + r"} && \multicolumn{3}{c}{" + values[1] + r"}\\"
+        if expected not in (TABLES / "i15_accuracy.tex").read_text(encoding="utf-8"):
+            raise ValueError("Persistence reference table mismatch")
+    fixed_conditions = REFERENCE / "expected-tables" / "conditions.tex"
+    if (TABLES / "conditions.tex").read_bytes() != fixed_conditions.read_bytes():
+        raise ValueError("Fixed conditions table mismatch")
+    for name in ([] if NEW_EXECUTION else ["i15_accuracy.tex", "i15_validation.tex", "conditions.tex"]):
         if (TABLES / name).read_text(encoding="utf-8") != (DATA / "expected-tables" / name).read_text(encoding="utf-8"):
             raise ValueError("Historical table content mismatch: " + name)
     if cells_checked != 66 or coordinates != 84:
         raise ValueError("Incomplete numeric output verification")
     return {"plotted_points": 48, "coordinates_and_ci_bounds": 84,
-            "rounded_table_cells": 66, "inherited_persistence_cells": 6,
-            "fixed_conditions_table": "unchanged", "historical_tables": "match"}
+            "rounded_table_cells": 66,
+            ("execution_persistence_cells" if NEW_EXECUTION else "inherited_persistence_cells"): 6,
+            "fixed_conditions_table": "unchanged",
+            "historical_tables": "not compared: new execution" if NEW_EXECUTION else "match"}
 
 
 def main(argv=None) -> None:
-    global OUT, TABLES, VALIDATION
+    global OUT, TABLES, VALIDATION, DATA, NEW_EXECUTION
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, help="Write figures/, tables/, validation/ below this directory instead of results/reproduced/.")
+    parser.add_argument("--data-dir", type=Path, help="Use aggregates exported from a completed new full run; requires an explicit fresh --output-dir.")
     parser.add_argument("--check-only", action="store_true", help="Verify references and existing rendered outputs without regenerating them.")
     args = parser.parse_args(argv)
-    if args.output_dir is not None:
-        base = args.output_dir.resolve()
-        OUT, TABLES, VALIDATION = base / "figures", base / "tables", base / "validation"
+    DATA = args.data_dir.resolve() if args.data_dir else REFERENCE
+    NEW_EXECUTION = args.data_dir is not None
+    if NEW_EXECUTION and args.output_dir is None:
+        parser.error("--data-dir requires an explicit --output-dir.")
+    base = args.output_dir.resolve() if args.output_dir else OUTPUT
+    for protected in (DATA, REFERENCE):
+        if base == protected or base in protected.parents or protected in base.parents:
+            raise ValueError("Rendering output must not overlap aggregate inputs or historical references.")
+    if NEW_EXECUTION:
+        if not args.check_only and base.exists() and any(base.iterdir()):
+            raise FileExistsError("New-execution rendering requires a new or empty output directory.")
+    OUT, TABLES, VALIDATION = base / "figures", base / "tables", base / "validation"
     reference_report = verify_reference()
     if not args.check_only:
         for folder in [OUT, TABLES, VALIDATION]:
@@ -373,14 +464,16 @@ def main(argv=None) -> None:
         primary_value(contrasts, seeds)
         mean_peak(contrasts)
         tables(accuracy, contrasts)
-        shutil.copyfile(DATA / "expected-tables/conditions.tex", TABLES / "conditions.tex")
+        shutil.copyfile(REFERENCE / "expected-tables/conditions.tex", TABLES / "conditions.tex")
         validate_points(contrasts, seeds)
         (VALIDATION / "plotted_points.json").write_text(json.dumps(DRAWN, indent=2) + "\n", encoding="utf-8")
     numeric_report = verify_rendered()
     outputs = sorted([*OUT.glob("*.pdf"), *OUT.glob("*.png"), *TABLES.glob("*.tex")])
     report = {"status": "PASS", "references": reference_report, "numeric_fidelity": numeric_report,
               "outputs": {p.parent.name + "/" + p.name: sha256(p) for p in outputs},
-              "scope": "Regeneration from fixed publication summaries; no training, private data access, or independent bootstrap recomputation.",
+              "origin": "new_full_experiment" if NEW_EXECUTION else "historical_reference",
+              "scope": ("Rendering aggregates from a newly completed full experiment; no reference scores are substituted."
+                        if NEW_EXECUTION else "Regeneration from fixed publication summaries; no training, private data access, or independent bootstrap recomputation."),
               "rounding": "Tables round only at final presentation; plotted values and CI bounds retain source precision.",
               "image_equivalence": "Scientific coordinates are checked; image bytes may differ with fonts and dependency versions."}
     (VALIDATION / "artifact-validation.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
@@ -389,5 +482,3 @@ def main(argv=None) -> None:
 
 if __name__ == "__main__":
     main()
-
-

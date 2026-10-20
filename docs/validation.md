@@ -4,9 +4,17 @@
 
 **All repository code is fully reproducible with the required inputs and documented environment.** The repository maintainer confirmed this status on 19 October 2026. It covers both the publication-artifact workflow and the full experiment workflow. Full experiments require authorized private hourly observations as specified in [data-contract.md](data-contract.md); commands and dependency versions are documented in [reproduction.md](reproduction.md) and [environments.md](environments.md).
 
-The execution record below describes the checks performed during repository assembly. Maintainer confirmation does not change that historical record or imply an additional full training run during packaging.
+The execution record below describes the checks performed during repository assembly. Maintainer confirmation does not change that historical record or imply an additional full training run during packaging. The manuscript bundle and PDF builder were subsequently removed from the current distribution at the owner's request; PDF checks below remain historical evidence for the original assembly, not current build instructions.
 
-## Completed scientific and artifact checks
+## Software distribution checks (20 October 2026)
+
+The full test suite in the isolated training environment passed **44 tests**, with the same 16 upstream Matplotlib/Pyparsing deprecation warnings. Added controls cover observed-only descriptive summaries, variable-specific proxy donors, saved thermal thresholds, full-run aggregate selection, exclusion of unexpected private columns, output-path protection, and consistent decimal rounding.
+
+Six CLI integration checks passed from a working directory outside the checkout root: synthetic descriptive audit; export of an explicitly synthetic complete-schema fixture; rendering and validation of its aggregates; and rendering and validation of historical reference aggregates without the manuscript. The fixture uses analytic synthetic predictions and does not represent newly trained paper models. These checks performed no model training and used no private observations.
+
+All 30 source-map entries resolve to 23 existing destinations with matching SHA-256 hashes. Historical reference files and rounded tables remain unchanged. The publication audit passed for 61 current files. Independent review found no remaining computational stage missing for the current study after adding descriptive diagnostics and the new-run export interface. The [coverage map](reproduction-coverage.md) records that scope.
+
+## Original assembly checks (19 October 2026)
 
 - The current manuscript's main claims were checked against 84 accuracy rows, 72 contrasts and 24 seed-point rows. All 72 contrast and peak-difference identities have the intended `other − FULL` sign. Negative values favor the alternative condition.
 - Reproduction verifies 48 plotted points, 84 plotted coordinates/confidence bounds, 66 numeric table cells and six simple-reference cells. Stored interval endpoints are checked, not independently recomputed from private hourly predictions.
@@ -16,7 +24,7 @@ The execution record below describes the checks performed during repository asse
 - The seven-page PDF built with MiKTeX. All pages and all three figures were visually inspected. No undefined citations/references or overfull boxes remain; four underfull box warnings do not clip content.
 - Independent publication review found no raw hourly observations, prediction series, credentials, location identifiers or personal paths in the selected files. Binary metadata and third-party notices were inspected.
 
-## Execution status
+## Original assembly execution record
 
 The clean clone at scientific-code commit `141ddfa` was installed normally (not editable) into a new Python 3.12.14 virtual environment with system-site packages disabled. `pip check` passed. Eight independent checks passed: source-access denial probes, artifact regeneration, existing-output verification, pytest, publication audit, mapped destination hashes, absent-private-data behavior, and a CLI call that launches a child Python process. Pytest reported **17 passed, 1 skipped**; the skipped module requires the training extra. All 52 mapping entries / 46 unique destination files matched their recorded checksums. The selected 90 publication files passed the release audit.
 
@@ -34,4 +42,4 @@ Full private-data training and independent reconstruction of the historical conf
 
 SHA-256 was captured before assembly for 566 scientific source/support files. The end check reports no changes. An additional 99 historical run-result JSON manifests were read only for fit counts and stopping-status checks; their first hashes were captured during review, after that first read, and were rechecked at completion. Those additional hashes are not described as a pre-read baseline. Their private inventory is not distributed. See [source-integrity.json](source-integrity.json).
 
-The author list remains unconfirmed. Citation metadata therefore remains an explicitly incomplete template, and the manuscript author block remains empty. These editorial omissions do not prevent the scientific artifact route from running. The repository owner selected the MIT License for the software on 20 October 2026; see [LICENSE-STATUS.md](../LICENSE-STATUS.md) for its scope.
+The author list remains unconfirmed. Citation metadata therefore remains an explicitly incomplete template. This omission does not prevent the figure/table and experiment workflows from running. The repository owner selected the MIT License for the software on 20 October 2026; see [LICENSE-STATUS.md](../LICENSE-STATUS.md) for its scope.

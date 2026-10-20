@@ -38,7 +38,7 @@ def files(staged: bool):
         relative = path.relative_to(ROOT)
         if any(p in IGNORED_PARTS or p.endswith(".egg-info") for p in relative.parts):
             continue
-        if path.suffix in {".pyc", ".aux", ".log", ".out", ".blg", ".bbl", ".fls"} or relative.as_posix() == "paper/main.pdf":
+        if path.suffix in {".pyc", ".aux", ".log", ".out", ".blg", ".bbl", ".fls"}:
             continue
         yield relative, path.read_bytes()
 
@@ -46,6 +46,8 @@ def files(staged: bool):
 def inspect(path: Path, content: bytes, confidential_terms: list[str]):
     issues = []
     name = path.as_posix()
+    if path.parts[0] == "paper" or name == "scripts/build_paper.py":
+        issues.append("manuscript sources/build files are excluded from the current distribution")
     if any(p in {".work", ".venv", "private", "predictions", "models", "cache"} for p in path.parts):
         issues.append("private/output directory")
     if path.suffix.lower() in DENIED_SUFFIXES or path.name.startswith(".env"):

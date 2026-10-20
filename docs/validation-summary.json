@@ -1,5 +1,18 @@
 {
   "validation_date": "2026-10-19",
+  "software_distribution_update": {
+    "validated_on": "2026-10-20",
+    "training_environment_tests": {"passed": 44, "failed": 0},
+    "cli_integration_checks": {"passed": 6, "failed": 0},
+    "cli_scope": "Synthetic descriptive audit and complete-schema export/render/validate; historical render/validate; all invoked outside the checkout root.",
+    "source_map_entries": 30,
+    "source_map_destinations": 23,
+    "publication_files_audited": 61,
+    "manuscript_in_current_distribution": false,
+    "manuscript_retained_in_earlier_git_history": true,
+    "full_training_performed_for_update": false,
+    "private_observations_used_for_update": false
+  },
   "reproducibility_status": {
     "status": "fully_reproducible",
     "scope": "All repository code, including publication artifacts and full experiments",

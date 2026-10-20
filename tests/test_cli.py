@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import pytest
 
 
 def test_public_import_and_help_have_no_workspace_side_effects(tmp_path):
@@ -15,13 +16,25 @@ def test_public_import_and_help_have_no_workspace_side_effects(tmp_path):
     assert list(tmp_path.iterdir()) == []
 
 
-def test_missing_data_is_an_actionable_error_before_training_import(tmp_path):
+@pytest.mark.parametrize('action', ['run', 'audit-data'])
+def test_missing_data_is_an_actionable_error_before_training_import(tmp_path, action):
     output = tmp_path / "must-not-be-created"
-    result = subprocess.run([sys.executable, "-m", "load_input_value.cli", "experiment", "run",
+    result = subprocess.run([sys.executable, "-m", "load_input_value.cli", "experiment", action,
                              "--data", str(tmp_path / "absent.csv"), "--output", str(output)],
                             cwd=tmp_path, text=True, capture_output=True)
     assert result.returncode == 2
     assert "Private input CSV not found" in result.stderr
     assert "--data" in result.stderr
     assert "Traceback" not in result.stderr
+    assert not output.exists()
+
+
+def test_missing_export_run_is_actionable_without_creating_output(tmp_path):
+    output = tmp_path / 'must-not-be-created'
+    result = subprocess.run([sys.executable, '-m', 'load_input_value.cli', 'experiment', 'export',
+                             '--run', str(tmp_path / 'absent-run'), '--output', str(output)],
+                            cwd=tmp_path, text=True, capture_output=True)
+    assert result.returncode == 2
+    assert 'Completed experiment directory not found' in result.stderr
+    assert 'Traceback' not in result.stderr
     assert not output.exists()

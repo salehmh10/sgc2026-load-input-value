@@ -16,10 +16,10 @@ The historical manifests describe Python 3.12.3 on Windows 11. I15 used an envir
 | XGBoost | 3.4.0 | 3.4.0 |
 | PyArrow | 25.0.0 | 25.0.0 |
 
-The lightweight base installs only NumPy and Matplotlib plus their dependencies. The `dev` extra supplies pytest, pandas and metadata-audit tools. The `train` extra adds the private-data scientific and model dependencies. Dependencies are installed into fresh virtual environments without system-site packages. Python 3.12 is the supported interpreter series; other versions have not been validated.
+The lightweight base installs only NumPy and Matplotlib plus their dependencies. The `dev` extra supplies pytest, pandas, PyArrow for synthetic export fixtures, and metadata-audit tools. The `train` extra adds the private-data scientific and model dependencies. Dependencies are installed into fresh virtual environments without system-site packages. Python 3.12 is the supported interpreter series; other versions have not been validated.
 
 Darts is pinned because the local TiDE adapter relies on its private module and dataset interfaces. The adapter removes only the scalar temporal-decoder output LayerNorm, keeps the other five normalization modules, and asserts 477,491 parameters. Replacing it with a stock TiDE model changes the method.
 
 The compatible pandas, SciPy and plotting pins differ from the historical environment. The repository does not claim bitwise equality of a new full training run. Synthetic numerical parity and execution checks are reported separately from paper artifact equality. The installed dependency inventories in `docs/environment-*.txt` identify the clean environments actually exercised; these focused inventories are evidence, not a copy of the original personal environment.
 
-The local build used Windows and MiKTeX. GitHub Actions tests the lightweight artifact route on Windows and Linux; actual completed runs, rather than the workflow's mere presence, determine the compatibility claim. Training smoke coverage is limited to the platform recorded in [validation.md](validation.md).
+The current figure/table workflow does not require TeX. The historical manuscript build used Windows and MiKTeX before the manuscript bundle was removed from the current distribution. GitHub Actions tests the lightweight artifact route on Windows and Linux; actual completed runs determine the compatibility claim. Training smoke coverage is limited to the platform recorded in [validation.md](validation.md).

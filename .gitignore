@@ -28,12 +28,5 @@ data/private/
 *.feather
 *.npz
 *.npy
-paper/*.aux
-paper/*.log
-paper/*.out
-paper/*.blg
-paper/*.bbl
-paper/*.fls
-paper/*.fdb_latexmk
-paper/*.synctex.gz
-paper/main.pdf
+# The manuscript and its typesetting bundle are outside this distribution.
+paper/
